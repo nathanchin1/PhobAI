@@ -15,7 +15,7 @@ bedrock_runtime = boto3.client(
     region_name='us-east-1'
 )
 
-model = YOLO("phobiamed10.pt")  
+model = YOLO("phobiav3med10.pt")  
 
 mon = {"top": 0, "left": 0, "width": 1920, "height": 1080}  
 
