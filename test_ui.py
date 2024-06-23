@@ -16,9 +16,9 @@ bedrock_runtime = boto3.client(
 )
 
 # TODO: Update to pretrained
-model = YOLO("spidernano15.pt")  # pretrained model
+model = YOLO("phobiamed10.pt")  
 
-mon = {"top": 0, "left": 0, "width": 1920, "height": 1080}  # screen capture dimensions
+mon = {"top": 0, "left": 0, "width": 1920, "height": 1080}  
 
 sct = mss.mss()
 
@@ -26,14 +26,14 @@ class TrackingBox(QtWidgets.QLabel):
     def __init__(self, score, classification, box, parent=None):
         super().__init__(parent)
         x, y, width, height = box 
-        self.setGeometry(x, y, width, height) # Set position of tracking box
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint) # Frameless box and overlay
-        self.setStyleSheet("background-color: rgba(100, 100, 100, 200);") # TODO blur section
+        self.setGeometry(x, y, width, height) 
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint) 
+        self.setStyleSheet("background-color: rgba(173, 216, 230, 255);") # TODO blur section
 
         # Create conf and cls label for widget overlay
-        label = QtWidgets.QLabel(f"{int(score * 100)}% {classification}", self) 
-        label.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0);") 
-        label.move(5, 5) 
+        # label = QtWidgets.QLabel(f"{int(score * 100)}% {classification}", self) 
+        # label.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0);") 
+        # label.move(5, 5) 
 
         self.show()
 
@@ -41,7 +41,7 @@ class MainApp(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, mon["width"], mon["height"]) # Set window to cover entire screen
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WA_TranslucentBackground) # set frameless & translucent
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WA_TranslucentBackground) 
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         # Timer for updating screen capture
@@ -55,6 +55,10 @@ class MainApp(QtWidgets.QMainWindow):
         # pynput mouse listener for click & scroll
         self.mouse_click_listener = pynput_mouse.Listener(on_click=self.on_mouse_click, on_scroll=self.on_mouse_scroll)
         self.mouse_click_listener.start()
+        
+        
+        
+        
 
     def on_mouse_click(self, x, y, button, pressed):
         if pressed and button == pynput_mouse.Button.left:
@@ -93,7 +97,7 @@ class MainApp(QtWidgets.QMainWindow):
         if boxes is not None:
             for box, score, cls in zip(boxes, scores, clss):
                 # Filter out low conf scores
-                if score < 0.1:
+                if score < 0.45:
                     continue
 
                 # Calculate coordinates for bounding box
