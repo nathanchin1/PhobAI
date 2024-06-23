@@ -107,40 +107,18 @@ class TrackingApp(QtWidgets.QMainWindow):
                 tracking_box = TrackingBox(score, classification, (x1, y1, width, height), self)
                 self.tracking_boxes.append(tracking_box)
 
-# class CustomTitleBar(QtWidgets.QWidget):
-#     def __init__(self, parent=None):
-#         super().__init__(parent)
-#         self.parent = parent
+class HoverButton(QtWidgets.QPushButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setMouseTracking(True)
 
-#         self.setAutoFillBackground(True)
-#         self.setBackgroundRole(QtGui.QPalette.Highlight)
+    def enterEvent(self, event):
+        self.setStyleSheet("background-color: #FFDDC1; color: #457B9D; border-radius: 10px;")
+        super().enterEvent(event)
 
-#         self.title = QtWidgets.QLabel("Phob.ai", self)
-#         self.title.setAlignment(QtCore.Qt.AlignCenter)
-#         font = QtGui.QFont()
-#         font.setPointSize(14)
-#         self.title.setFont(font)
-#         self.title.setStyleSheet("color: white;")
-
-#         self.close_button = QtWidgets.QPushButton("X", self)
-#         self.close_button.clicked.connect(self.close_window)
-#         self.close_button.setStyleSheet("background-color: red; color: white; border: none;")
-
-#         layout = QtWidgets.QHBoxLayout(self)
-#         layout.addWidget(self.title)
-#         layout.addWidget(self.close_button, 0, QtCore.Qt.AlignRight)
-#         self.setLayout(layout)
-
-#     def close_window(self):
-#         self.parent.close()
-
-#     def mousePressEvent(self, event):
-#         self.old_pos = event.globalPos()
-
-#     def mouseMoveEvent(self, event):
-#         delta = event.globalPos() - self.old_pos
-#         self.parent.move(self.parent.x() + delta.x(), self.parent.y() + delta.y())
-#         self.old_pos = event.globalPos()
+    def leaveEvent(self, event):
+        self.setStyleSheet("background-color: #457B9D; color: #FFDDC1; border-radius: 10px;")
+        super().leaveEvent(event)
 
 class MainApp(QtWidgets.QMainWindow):
     def __init__(self):
@@ -148,15 +126,11 @@ class MainApp(QtWidgets.QMainWindow):
 
         self.setWindowTitle("Phob.ai")
         self.setGeometry(100, 100, 600, 400)
-        # self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setStyleSheet("background-color: #F1FAEE;")
-        
-        # self.title_bar = CustomTitleBar(self)
-        # self.setMenuWidget(self.title_bar)
 
         self.title_label = QtWidgets.QLabel("Phob.ai", self)
         self.title_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.title_label.setGeometry(50, 10, 500, 100)
+        self.title_label.setGeometry(50, 30, 500, 100)
         font = QtGui.QFont("Arial", 16, QtGui.QFont.Bold)
         font.setPointSize(70)
         self.title_label.setFont(font)
@@ -164,39 +138,39 @@ class MainApp(QtWidgets.QMainWindow):
         
         font2 = QtGui.QFont("Arial", 16, QtGui.QFont.Bold)
 
-        self.start_button = QtWidgets.QPushButton("Start", self)
-        self.start_button.setGeometry(250, 120, 100, 40)
+        self.start_button = HoverButton("Start", self)
+        self.start_button.setGeometry(250, 160, 100, 40)
         self.start_button.clicked.connect(self.start_tracking)
         self.start_button.setStyleSheet("background-color: #457B9D; color: #FFDDC1; border-radius: 10px;")
         self.start_button.setFont(font2)
 
-        self.stop_button = QtWidgets.QPushButton("Stop", self)
-        self.stop_button.setGeometry(250, 120, 100, 40)
+        self.stop_button = HoverButton("Stop", self)
+        self.stop_button.setGeometry(250, 160, 100, 40)
         self.stop_button.clicked.connect(self.stop_tracking)
         self.stop_button.hide()
         self.stop_button.setStyleSheet("background-color: #457B9D; color: #FFDDC1; border-radius: 10px;")
         self.stop_button.setFont(font2)
 
-        self.edit_button = QtWidgets.QPushButton("Edit", self)
-        self.edit_button.setGeometry(250, 180, 100, 40)
+        self.edit_button = HoverButton("Edit", self)
+        self.edit_button.setGeometry(250, 220, 100, 40)
         self.edit_button.clicked.connect(self.show_edit_view)
         self.edit_button.setStyleSheet("background-color: #457B9D; color: #FFDDC1; border-radius: 10px;")
         self.edit_button.setFont(font2)
 
         self.textbox = QtWidgets.QLineEdit(self)
-        self.textbox.setGeometry(200, 120, 200, 30)
+        self.textbox.setGeometry(200, 100, 200, 30)
         self.textbox.hide()
         self.textbox.setStyleSheet("background-color: #E9C46A; color: #F1FAEE; border-radius: 10px;")
         self.textbox.setFont(font2)
 
-        self.save_button = QtWidgets.QPushButton("Save", self)
+        self.save_button = HoverButton("Save", self)
         self.save_button.setGeometry(250, 160, 100, 40)
         self.save_button.clicked.connect(self.process_text)
         self.save_button.hide()
         self.save_button.setStyleSheet("background-color: #457B9D; color: #FFDDC1; border-radius: 10px;")
         self.save_button.setFont(font2)
 
-        self.back_button = QtWidgets.QPushButton("Back", self)
+        self.back_button = HoverButton("Back", self)
         self.back_button.setGeometry(250, 220, 100, 40)
         self.back_button.clicked.connect(self.show_main_view)
         self.back_button.hide()
