@@ -14,3 +14,4 @@ According to Singlecare, an estimated 19 million Americans suffer from at least 
 - **YoloV8**
 - **AWS Bedrock, Lambda, EC2, Graviton**
 - **Claude 3.5 Sonnet**
+- **Stability Diffusion 1.0**
