@@ -17,7 +17,7 @@ bedrock_runtime = boto3.client(
 )
 
 # TODO: Update to pretrained
-model = YOLO("yolov8n.pt")  # pretrained model
+model = YOLO("spidernano15.pt")  # pretrained model
 
 mon = {"top": 0, "left": 0, "width": 1920, "height": 1080}  # screen capture dimensions
 
