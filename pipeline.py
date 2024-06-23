@@ -39,7 +39,6 @@ def resize_image(input_image_path, output_image_path, size=(1024, 1024)):
 
 for obj in response:
     for i in range(10):  
-        # TODO: To be replaced with S3 bucket with webscraped results
         source_directory = "source_images"
         source_images = [os.path.join(source_directory, file) for file in os.listdir(source_directory) if file.endswith(('png', 'jpg', 'jpeg'))]
         random_image = random.choice(source_images)

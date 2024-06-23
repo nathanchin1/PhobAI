@@ -15,7 +15,6 @@ bedrock_runtime = boto3.client(
     region_name='us-east-1'
 )
 
-# TODO: Update to pretrained
 model = YOLO("phobiamed10.pt")  
 
 mon = {"top": 0, "left": 0, "width": 1920, "height": 1080}  
@@ -28,9 +27,8 @@ class TrackingBox(QtWidgets.QLabel):
         x, y, width, height = box 
         self.setGeometry(x, y, width, height) 
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint) 
-        self.setStyleSheet("background-color: rgba(173, 216, 230, 255);") # TODO blur section
+        self.setStyleSheet("background-color: rgba(173, 216, 230, 255);") 
 
-        # Create conf and cls label for widget overlay
         # label = QtWidgets.QLabel(f"{int(score * 100)}% {classification}", self) 
         # label.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0);") 
         # label.move(5, 5) 
@@ -44,21 +42,14 @@ class MainApp(QtWidgets.QMainWindow):
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WA_TranslucentBackground) 
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
-        # Timer for updating screen capture
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateScreen)
-        self.timer.start(100)  # speed depends on computer gpu
+        self.timer.start(100)  
 
-        # Store tracking widgets
         self.tracking_boxes = []
 
-        # pynput mouse listener for click & scroll
         self.mouse_click_listener = pynput_mouse.Listener(on_click=self.on_mouse_click, on_scroll=self.on_mouse_scroll)
         self.mouse_click_listener.start()
-        
-        
-        
-        
 
     def on_mouse_click(self, x, y, button, pressed):
         if pressed and button == pynput_mouse.Button.left:
@@ -75,20 +66,16 @@ class MainApp(QtWidgets.QMainWindow):
                 self.tracking_boxes = []
 
     def updateScreen(self):
-        # Capture current screen
         im = np.array(sct.grab(mon))
 
-        # Ensure image has 3 channels (RGB)
         if im.shape[2] == 4:
             im = cv2.cvtColor(im, cv2.COLOR_RGBA2RGB)
 
-        # YOLO detection box data
         results = model.predict(im, show=False)
         boxes = results[0].boxes.xyxy.cpu().numpy()
         scores = results[0].boxes.conf.cpu().numpy()
         clss = results[0].boxes.cls.cpu().numpy()
 
-        # Remove old widgets if not toggled off by click or scroll
         if not self.tracking_boxes:
             for box in self.tracking_boxes:
                 box.deleteLater()
@@ -96,15 +83,12 @@ class MainApp(QtWidgets.QMainWindow):
 
         if boxes is not None:
             for box, score, cls in zip(boxes, scores, clss):
-                # Filter out low conf scores
                 if score < 0.45:
                     continue
 
-                # Calculate coordinates for bounding box
                 x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
                 width, height = x2 - x1, y2 - y1
 
-                # Scale coordinates to match the display
                 x1 = int(x1 * mon["width"] / im.shape[1])
                 y1 = int(y1 * mon["height"] / im.shape[0])
                 width = int(width * mon["width"] / im.shape[1])
@@ -112,7 +96,6 @@ class MainApp(QtWidgets.QMainWindow):
 
                 classification = model.names[int(cls)]
 
-                # Create and show tracking box
                 tracking_box = TrackingBox(score, classification, (x1, y1, width, height), self)
                 self.tracking_boxes.append(tracking_box)
 
@@ -201,7 +184,7 @@ class StartWindow(QtWidgets.QWidget):
 
     def stop_tracking(self):
         if hasattr(self, 'main_app') and self.main_app.isVisible():
-            self.main_app.timer.stop()  # Stop the timer to stop the model
+            self.main_app.timer.stop()  
             self.main_app.close()
         self.start_button.show()
         self.stop_button.hide()
@@ -227,7 +210,7 @@ class StartWindow(QtWidgets.QWidget):
             response = bedrock_runtime.invoke_model(body=body, modelId="anthropic.claude-3-5-sonnet-20240620-v1:0")
             response_body = json.loads(response.get("body").read())
             print(response_body["content"][0]["text"])
-            self.saved_label.show()  # Show the "Saved!" label
+            self.saved_label.show()  
         except ClientError as e:
             print(f"An error occurred: {e}")
 
