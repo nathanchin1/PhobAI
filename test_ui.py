@@ -116,11 +116,11 @@ class StartWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Phob.ai")
+        self.setWindowTitle("phob.ai")
         self.setGeometry(100, 100, 600, 400)
         self.setStyleSheet("background-color: #F1FAEE;")
 
-        self.title_label = QtWidgets.QLabel("Phob.ai", self)
+        self.title_label = QtWidgets.QLabel("phob.ai", self)
         self.title_label.setAlignment(QtCore.Qt.AlignCenter)
         self.title_label.setGeometry(50, 30, 500, 100)
         font = QtGui.QFont("Arial", 16, QtGui.QFont.Bold)
@@ -175,6 +175,12 @@ class StartWindow(QtWidgets.QWidget):
         self.saved_label.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0);")
         self.saved_label.setFont(font2)
         self.saved_label.hide()
+        
+        self.logo_label = QtWidgets.QLabel(self)
+        self.logo_label.setGeometry(20, 280, 100, 100)
+        pixmap = QtGui.QPixmap("logo.png")
+        self.logo_label.setPixmap(pixmap)
+        self.logo_label.setAlignment(QtCore.Qt.AlignCenter)
 
     def start_tracking(self):
         self.main_app = MainApp()
