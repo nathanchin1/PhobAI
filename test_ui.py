@@ -8,7 +8,6 @@ from botocore.exceptions import ClientError
 
 load_dotenv()
 
-
 bedrock_runtime = boto3.client(
     'bedrock-runtime',
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
@@ -193,12 +192,15 @@ class StartWindow(QtWidgets.QWidget):
     def start_tracking(self):
         self.main_app = MainApp()
         self.main_app.show()
-        self.hide()
+        self.start_button.hide()
+        self.stop_button.show()
 
     def stop_tracking(self):
         if hasattr(self, 'main_app') and self.main_app.isVisible():
+            self.main_app.timer.stop()  # Stop the timer to stop the model
             self.main_app.close()
-        self.show_main_view()
+        self.start_button.show()
+        self.stop_button.hide()
 
     def show_edit_view(self):
         self.title_label.hide()
@@ -234,7 +236,6 @@ class StartWindow(QtWidgets.QWidget):
         self.start_button.show()
         self.stop_button.hide()
         self.edit_button.show()
-        self.show()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
