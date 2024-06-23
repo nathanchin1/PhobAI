@@ -10,5 +10,5 @@ Phob.ai is a tool meant to help those with phobias. We understand that many suff
 ## Stack:
 - **OpenCV**
 - **YoloV8**
-- **AWS Bedrock, Lambda, EC3, Graviton**
+- **AWS Bedrock, Lambda, EC2, Graviton**
 - **Claude 3.5 Sonnet**
